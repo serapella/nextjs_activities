@@ -1,6 +1,9 @@
+"use server";
+
 import type { Activity } from "../../types";
 import { getAllActivities } from "../../queries";
 import { addActivityFromFormData } from "../../actions";
+
 import {
   Card,
   CardContent,
@@ -10,19 +13,10 @@ import {
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Checkbox } from "../../components/ui/checkbox";
-import { useActionState } from "react";
+// import { useActionState } from "react";
 
 export default async function Activities() {
   const activities = await getAllActivities();
-
-  async function action(prevState: any, formData: FormData) {
-    "use server";
-    await addActivityFromFormData(formData);
-    // Je zou eventueel kunnen revalidaten of redirecten
-    return {};
-  }
-
-  // useActionState is alleen beschikbaar in client components, dus we laten het formulier gewoon een POST doen naar dezelfde pagina
 
   return (
     <div className="container mx-auto p-4 max-w-4xl">
@@ -31,7 +25,7 @@ export default async function Activities() {
           <CardTitle>Add New Activity</CardTitle>
         </CardHeader>
         <CardContent>
-          <form action={action} method="POST" className="space-y-4">
+          <form action="/api/activities" method="POST" className="space-y-4">
             <div className="flex gap-4">
               <Input
                 type="text"
