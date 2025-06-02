@@ -2,7 +2,7 @@
 
 import type { Activity } from "../../types";
 import { getAllActivities } from "../../queries";
-import { addActivityFromFormData } from "../../actions";
+import { addActivityServerAction } from "../../app/actions";
 
 import {
   Card,
@@ -13,37 +13,20 @@ import {
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Checkbox } from "../../components/ui/checkbox";
-// import { useActionState } from "react";
+import ActionStateForm from "../../components/ActionStateForm";
 
 export default async function Activities() {
   const activities = await getAllActivities();
 
   return (
     <div className="container mx-auto p-4 max-w-4xl">
+      <ActionStateForm />
       <Card className="mb-8">
         <CardHeader>
           <CardTitle>Add New Activity</CardTitle>
         </CardHeader>
         <CardContent>
-          <form
-            action={async (formData) => {
-              const response = await fetch("/api/activities", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  activity: formData.get("activity"),
-                  image: formData.get("image"),
-                }),
-              });
-              if (!response.ok) {
-                throw new Error("Failed to add activity");
-              }
-              window.location.reload();
-            }}
-            className="space-y-4"
-          >
+          <form action={addActivityServerAction} className="space-y-4">
             <div className="flex gap-4">
               <Input
                 type="text"
