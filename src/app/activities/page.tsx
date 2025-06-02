@@ -25,7 +25,25 @@ export default async function Activities() {
           <CardTitle>Add New Activity</CardTitle>
         </CardHeader>
         <CardContent>
-          <form action="/api/activities" method="POST" className="space-y-4">
+          <form
+            action={async (formData) => {
+              const response = await fetch("/api/activities", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  activity: formData.get("activity"),
+                  image: formData.get("image"),
+                }),
+              });
+              if (!response.ok) {
+                throw new Error("Failed to add activity");
+              }
+              window.location.reload();
+            }}
+            className="space-y-4"
+          >
             <div className="flex gap-4">
               <Input
                 type="text"
@@ -45,7 +63,6 @@ export default async function Activities() {
           </form>
         </CardContent>
       </Card>
-
       <div className="space-y-4">
         {activities.map((activity) => (
           <Card key={activity.id}>
@@ -54,7 +71,6 @@ export default async function Activities() {
                 <div className="flex items-center gap-4 flex-1">
                   <Checkbox
                     checked={activity.checked}
-                    // Geen onCheckedChange, want geen client code
                     className="h-6 w-6"
                     disabled
                   />
@@ -77,7 +93,6 @@ export default async function Activities() {
                   <span className="text-sm text-gray-500">
                     {activity.checked ? "Done" : "Not done"}
                   </span>
-                  {/* Geen delete button zonder client code */}
                 </div>
               </div>
             </CardContent>
